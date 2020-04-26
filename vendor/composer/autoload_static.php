@@ -142,13 +142,15 @@ class ComposerStaticInit9f0ac20cd6f1d125a0d3b35c0ae99ffa
         ),
         'C' => 
         array (
+            'Core\\' => 5,
             'Composer\\XdebugHandler\\' => 23,
             'Composer\\Semver\\' => 16,
+            'Client\\' => 7,
         ),
         'A' => 
         array (
-            'App\\Tests\\' => 10,
-            'App\\' => 4,
+            'Application\\Tests\\' => 18,
+            'Application\\' => 12,
         ),
     );
 
@@ -534,6 +536,10 @@ class ComposerStaticInit9f0ac20cd6f1d125a0d3b35c0ae99ffa
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
         ),
+        'Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/module/Core/src',
+        ),
         'Composer\\XdebugHandler\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/xdebug-handler/src',
@@ -542,13 +548,17 @@ class ComposerStaticInit9f0ac20cd6f1d125a0d3b35c0ae99ffa
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
-        'App\\Tests\\' => 
+        'Client\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/module/Client/src',
+        ),
+        'Application\\Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'App\\' => 
+        'Application\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
+            0 => __DIR__ . '/../..' . '/module/Application/src',
         ),
     );
 
