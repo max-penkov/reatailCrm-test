@@ -10,3 +10,5 @@ composer-install:
 	docker-compose run --rm php-cli composer install
 init:
 	pull build up
+assets-install:
+	docker-compose run --rm node npm install
