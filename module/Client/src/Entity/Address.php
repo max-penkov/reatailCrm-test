@@ -3,6 +3,7 @@
 namespace Client\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Client\Repository\AddressRepository")
@@ -18,11 +19,13 @@ class Address
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("with_address")
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("with_address")
      */
     private $address;
 

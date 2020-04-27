@@ -34,7 +34,7 @@ class Client
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity="Client\Entity\Address", mappedBy="client", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Client\Entity\Address", mappedBy="client", cascade={"persist"})
      */
     private $address;
 

@@ -42,6 +42,14 @@ services:
         volumes:
             - ./:/app
         working_dir: /app
+    swagger-ui:
+        image: swaggerapi/swagger-ui
+        networks:
+            service:
+                aliases:
+                    - ui.service
+        environment:
+            SWAGGER_JSON: /app/openapi.yml
 volumes:
     postgres:
     composer:
