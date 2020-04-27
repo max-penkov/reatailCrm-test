@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: RetailCrmTest
+  description: 'This service provide simple api to store and edit json documents'
+  contact:
+    email: loco@list.ru
+  version: 1.0.0
+servers:
+  -
+    url: 'http://127.0.0.1:8000/api/v1'
+    description: api
+paths:
+  /clients:
+    get:
+      tags:
+        - Clients
+      summary: 'List of clients'
+      operationId: 'Application\Controller\ClientController::index'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Page number for display results'
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+        -
+          name: perPage
+          in: query
+          description: 'Per page clients count'
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiResponsePagination'
+components:
+  schemas:
+    ApiResponsePagination:
+      title: 'Client response with pagination'
+      properties:
+        collection:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      type: object
+    Client:
+      title: 'Client schema'
+      properties:
+        id:
+          description: Id
+          type: string
+        name:
+          description: Name
+          required:
+            - name
+          type: string
+      type: object
+    Pagination:
+      title: 'Pagination schema'
+      properties:
+        page:
+          title: 'Page number'
+          type: integer
+          format: int
+        perPage:
+          title: 'Items per page'
+          type: integer
+          format: int
+        total:
+          title: Total
+          type: integer
+          format: int
+      type: object

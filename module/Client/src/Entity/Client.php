@@ -2,12 +2,14 @@
 
 namespace Client\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Client\Repository\ClientRepository")
+ * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
  */
 class Client
 {
@@ -38,6 +40,21 @@ class Client
      */
     private $address;
 
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     * @var DateTime
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     * @var DateTime
+     */
+    private $updatedAt;
+
+    /**
+     * Client constructor.
+     */
     public function __construct()
     {
         $this->address = new ArrayCollection();
@@ -113,5 +130,39 @@ class Client
         }
 
         return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     * @ORM\PrePersist()
+     */
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     * @ORM\PreUpdate()
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

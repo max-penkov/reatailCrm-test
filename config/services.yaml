@@ -15,13 +15,17 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     Application\:
         resource: '../module/Application/src/*'
-        exclude: '../module/Application/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../module/Application/src/{DependencyInjection,Entity,DTO,Migrations,Tests,Kernel.php}'
     Core\:
         resource: '../module/Core/src/*'
-        exclude: '../module/Core/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../module/Core/src/{DependencyInjection,Entity,DTO,Migrations,Tests,Kernel.php}'
     Client\:
         resource: '../module/Client/src/*'
-        exclude: '../module/Client/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../module/Client/src/{DependencyInjection,Entity,DTO,Migrations,Tests,Kernel.php}'
+
+    Client\Repository\ClientRepository: ~
+    Client\Repository\ClientRepositoryInterface: '@Client\Repository\ClientRepository'
+
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class

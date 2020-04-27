@@ -22,6 +22,8 @@ services:
         build:
             context: ./docker/php/cli
             dockerfile: Dockerfile
+        environment:
+            APPLICATION_EXTERNAL_URL: "http://127.0.0.1:8000/api/v1"
         volumes:
             - ./:/app
             - composer:/root/.composer/cache
@@ -44,12 +46,13 @@ services:
         working_dir: /app
     swagger-ui:
         image: swaggerapi/swagger-ui
-        networks:
-            service:
-                aliases:
-                    - ui.service
         environment:
             SWAGGER_JSON: /app/openapi.yml
+            APPLICATION_EXTERNAL_URL: "http://127.0.0.1:8000/api/v1"
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./public/openapi.yml:/app/openapi.yml
 volumes:
     postgres:
     composer:

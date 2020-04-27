@@ -1,3 +1,7 @@
 controllers:
     resource: ../../module/Application/src/Controller/
     type: annotation
+    prefix: /api/v1
+    name_prefix: api.
+    defaults:
+        _format: json

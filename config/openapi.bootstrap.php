@@ -1,0 +1,3 @@
+<?php
+
+define('APPLICATION_EXTERNAL_URL', getenv('APPLICATION_EXTERNAL_URL'));

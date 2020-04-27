@@ -1,22 +1,79 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Client\Repository;
 
 use Client\Entity\Client;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use DomainException;
+use Ds\Vector;
+use Exception;
 
 /**
- * @method Client|null find($id, $lockMode = null, $lockVersion = null)
- * @method Client|null findOneBy(array $criteria, array $orderBy = null)
- * @method Client[]    findAll()
- * @method Client[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * Class ClientRepository
+ * @package Client\Repository
  */
-class ClientRepository extends ServiceEntityRepository
+class ClientRepository implements ClientRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+    /**
+     * @var ClientRepository|EntityRepository
+     */
+    private $repository;
+
+    public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($registry, Client::class);
+        $this->em         = $em;
+        $this->repository = $em->getRepository(Client::class);
+    }
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return Vector
+     */
+    public function fetchAll(int $limit, int $offset)
+    {
+        $clients = new Vector();
+        try {
+            $qb = $this->repository->createQueryBuilder('c')->orderBy('c.createdAt', 'desc');
+
+            $result = $qb->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
+
+            if ($result === false) {
+                return $clients;
+            }
+
+            foreach ($result as $item) {
+                $clients->push($item);
+            }
+
+            return $clients;
+        } catch (Exception $e) {
+            throw new DomainException("Can't fetch clients", 0, $e->getMessage());
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotal()
+    {
+        $qb = $this->em->getConnection()->createQueryBuilder();
+        $qb->select('count(id)')->from('client', 'c');
+
+        $result = $qb->execute()->fetchColumn();
+
+        return (int) $result;
     }
 
     // /**
