@@ -22,7 +22,6 @@ class Client
      ** @OA\Property(
      *     description="Id",
      * )
-     * @var string
      */
     public $id;
 
@@ -40,16 +39,41 @@ class Client
     public $name;
 
     /**
-     * @param ClientEntity $project
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Email()
+     * @OA\Property(
+     *     description="Email",
+     *     required={"email"}
+     * )
+     * @var string
+     */
+    public $email;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(min="6", max="10")
+     * @OA\Property(
+     *     description="Phone",
+     * )
+     * @var string
+     */
+    public $phone;
+
+    /**
+     * @param ClientEntity $client
      *
      * @return static
      */
-    public static function buildFromClient(ClientEntity $project): self
+    public static function buildFromClient(ClientEntity $client): self
     {
         $obj = new self();
 
-        $obj->id          = $project->getId();
-        $obj->name        = $project->getName();
+        $obj->id    = $client->getId();
+        $obj->name  = $client->getName();
+        $obj->email = $client->getEmail();
+        $obj->phone = $client->getPhone();
 
         return $obj;
     }

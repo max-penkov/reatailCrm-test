@@ -1,0 +1,62 @@
+<template>
+	<div
+		v-show="show"
+		class="alert alert-flash"
+		:class="'alert-'+level"
+		role="alert"
+		v-text="body"
+	/>
+</template>
+
+<script>
+	export default {
+		props: {
+			message: {
+				type: String,
+			}
+		},
+
+		data() {
+			return {
+				body: this.message,
+				level: 'success',
+				show: false
+			}
+		},
+
+		created() {
+			if (this.message) {
+				this.flash();
+			}
+
+			window.events.$on('flash', data => this.flash(data));
+		},
+		validations: {},
+		methods: {
+			flash(data) {
+				if (data) {
+					this.body = data.message;
+					this.level = data.level;
+				}
+
+				this.show = true;
+
+				this.hide();
+			},
+
+			hide() {
+				setTimeout(() => {
+					this.show = false;
+				}, 3000);
+			}
+		}
+	};
+</script>
+
+<style>
+	.alert-flash {
+		position: fixed !important;
+		right: 25px;
+		top: 70px;
+	}
+</style>

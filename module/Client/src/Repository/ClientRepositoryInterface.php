@@ -2,6 +2,7 @@
 
 namespace Client\Repository;
 
+use Client\Entity\Client;
 use Ds\Vector;
 
 /**
@@ -22,4 +23,18 @@ interface ClientRepositoryInterface
      * @return int
      */
     public function getTotal();
+
+    /**
+     * @param Client $client
+     *
+     * @return Client
+     */
+    public function save(Client $client): Client;
+
+    /**
+     * @param string $id
+     *
+     * @return Client
+     */
+    public function get(string $id): Client;
 }

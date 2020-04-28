@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Application\DTO\Client\ApiResponsePagination;
+use Application\DTO\Client\Client;
+use Client\Entity\Client as ClientEntity;
 use Client\Service\ClientService;
 use Ds\Map;
 use OpenApi\Annotations as OA;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class ClientController
@@ -22,15 +29,37 @@ class ClientController extends BaseController
      * @var ClientService
      */
     private $service;
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
 
     /**
      * ClientController constructor.
      *
-     * @param ClientService $service
+     * @param ClientService       $service
+     * @param SerializerInterface $serializer
+     * @param LoggerInterface     $logger
+     * @param ValidatorInterface  $validator
      */
-    public function __construct(ClientService $service)
-    {
-        $this->service = $service;
+    public function __construct(
+        ClientService $service,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        ValidatorInterface $validator
+    ) {
+        $this->service    = $service;
+        $this->serializer = $serializer;
+        $this->logger     = $logger;
+        $this->validator  = $validator;
     }
 
     /**
@@ -67,7 +96,7 @@ class ClientController extends BaseController
      *         )
      *     ),
      * )
-     * @Route("clients", name="clients.list", methods={"GET"})
+     * @Route("/clients", name="clients.list", methods={"GET"})
      * @param Request $request
      *
      * @return JsonResponse
@@ -86,5 +115,101 @@ class ClientController extends BaseController
             $perPage,
             $clientsMap->get('total')
         ));
+    }
+
+    /**
+     * @OA\POST(
+     *     path="/clients/create",
+     *     summary="Create a new client",
+     *     tags={"Clients"},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(ref="#/components/schemas/Client")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success response",
+     *        @OA\JsonContent(ref="#/components/schemas/Client")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Errors",
+     *         @OA\JsonContent(ref="#/components/schemas/Error")
+     *     ),
+     * )
+     * @Route("/clients/create", name="clients.create", methods={"POST"})
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function create(Request $request)
+    {
+        // Deserialize to DTO client
+        /** @var Client $client */
+        $client = $this->serializer->deserialize(
+            $request->getContent(),
+            Client::class,
+            JsonEncoder::FORMAT,
+            [
+                'ignored_attributes' => ['id'],
+            ]
+        );
+
+        // Validation check
+        if ($errors = $this->validator->validate($client)) {
+//            throw new ValidationException($errors);
+        }
+
+        try {
+            $client = $this->service->create($client->name, $client->email, $client->phone);
+        } catch (\DomainException $e) {
+        }
+        $clientDTO = Client::buildFromClient($client);
+
+        return $this->json($clientDTO, Response::HTTP_OK);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/clients/{id}/update",
+     *     summary="Updating the current client",
+     *     tags={"Clients"},
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(ref="#/components/schemas/Client")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success response",
+     *         @OA\JsonContent(ref="#/components/schemas/Client")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Errors",
+     *         @OA\JsonContent(ref="#/components/schemas/Error")
+     *     ),
+     * )
+     * @Route("/clients/{id}/update", name="clietns.edit", methods={"PUT"})
+     * @param Request      $request
+     * @param ClientEntity $client
+     *
+     * @return JsonResponse
+     */
+    public function update(Request $request, ClientEntity $client)
+    {
+        /** @var Client $clientDTO */
+        $clientDTO = $this->serializer->deserialize($request->getContent(), Client::class, JsonEncoder::FORMAT);
+
+        $client = $this->service->update($client->getId(), $clientDTO->name, $clientDTO->email, $clientDTO->phone);
+
+        $clientDTO = Client::buildFromClient($client);
+
+        return $this->json($clientDTO, Response::HTTP_OK);
     }
 }

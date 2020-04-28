@@ -56,12 +56,26 @@ Encore
     // enables Sass/SCSS support
     .enableSassLoader()
 
+    .enableVueLoader()
+
+    // enable ESLint
+    .addLoader({
+        enforce: 'pre',
+        test: /\.(js|vue)$/,
+        loader: 'eslint-loader',
+        exclude: /node_modules/,
+        options: {
+            fix: true,
+            emitError: true,
+            emitWarning: true,
+        },
+    })
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
+    .enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()

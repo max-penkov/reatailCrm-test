@@ -76,6 +76,34 @@ class ClientRepository implements ClientRepositoryInterface
         return (int) $result;
     }
 
+    /**
+     * @param Client $client
+     *
+     * @return Client
+     */
+    public function save(Client $client): Client
+    {
+        $this->em->persist($client);
+        $this->em->flush();
+
+        return $client;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Client
+     */
+    public function get(string $id): Client
+    {
+        /** @var Client $client */
+        if (!$client = $this->repository->find($id)) {
+            throw new DomainException('Client is not found.');
+        }
+
+        return $client;
+    }
+
     // /**
     //  * @return Client[] Returns an array of Client objects
     //  */

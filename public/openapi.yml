@@ -7,7 +7,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://127.0.0.1:8000/api/v1'
+    url: 'http://127.0.0.1:8081/api/v1'
     description: api
 paths:
   /clients:
@@ -42,6 +42,30 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ApiResponsePagination'
+  /clients/create:
+    post:
+      tags:
+        - Clients
+      summary: 'Create a new client'
+      operationId: 'Application\Controller\ClientController::create'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     ApiResponsePagination:
@@ -59,12 +83,39 @@ components:
       properties:
         id:
           description: Id
-          type: string
         name:
           description: Name
           required:
             - name
           type: string
+        email:
+          description: Email
+          required:
+            - email
+          type: string
+        phone:
+          description: Phone
+          type: string
+      type: object
+    Error:
+      description: 'Api Error schema'
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        class:
+          type: string
+          nullable: true
+        trace:
+          type: array
+          items:
+            type: object
+          nullable: true
       type: object
     Pagination:
       title: 'Pagination schema'

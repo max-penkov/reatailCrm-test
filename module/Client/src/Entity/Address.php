@@ -11,9 +11,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Address
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="guid", unique=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -35,7 +36,7 @@ class Address
      */
     private $client;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

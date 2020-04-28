@@ -3,20 +3,24 @@
 namespace Client\Entity;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(fields={"name", "email"})
  */
 class Client
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="guid", unique=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -54,13 +58,36 @@ class Client
 
     /**
      * Client constructor.
+     *
+     * @param string $name
+     * @param string $email
+     * @param string $phone
+     *
+     * @throws \Exception
      */
-    public function __construct()
+    public function __construct(string $name, string $email, string $phone)
     {
-        $this->address = new ArrayCollection();
+        $this->name      = $name;
+        $this->email     = $email;
+        $this->phone     = $phone;
+        $this->address   = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    /**
+     * @param string $name
+     * @param string $email
+     * @param string $phone
+     */
+    public function edit(string $name, string $email, string $phone)
+    {
+        $this->name  = $name;
+        $this->email = $email;
+        $this->phone = $phone;
+    }
+
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -141,12 +168,11 @@ class Client
     }
 
     /**
-     * @param DateTime $createdAt
      * @ORM\PrePersist()
      */
-    public function setCreatedAt(DateTime $createdAt): void
+    public function setCreatedAt(): void
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new DateTimeImmutable();
     }
 
     /**
@@ -158,11 +184,10 @@ class Client
     }
 
     /**
-     * @param DateTime $updatedAt
      * @ORM\PreUpdate()
      */
-    public function setUpdatedAt(DateTime $updatedAt): void
+    public function setUpdatedAt(): void
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new DateTimeImmutable();
     }
 }
