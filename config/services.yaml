@@ -34,7 +34,7 @@ services:
         arguments:
             $events:
                 - postUpdate
-#                - postPersist
+                - postPersist
         tags:
             - { name: doctrine.event_subscriber, connection: default }
     # controllers are imported separately to make sure services can be injected

@@ -36,7 +36,7 @@
         slot(name="table_afterRow", :value="value")
     .table-content(v-else)
       .table-content-row
-        .row-content {{ 'Список клиентов...' }}
+        .row-content {{ 'Данные...' }}
     .table_pagination.mt-5(v-if="pagination")
       paginate(
         v-if="pageCount > 1"

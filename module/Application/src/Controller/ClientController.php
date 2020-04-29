@@ -218,7 +218,7 @@ class ClientController extends BaseController
 
     /**
      * @OA\Get(
-     *     path="/clients/{id}",
+     *     path="/clients/show/{id}",
      *     summary="Show client",
      *     tags={"Clients"},
      *     @OA\Parameter(
@@ -235,7 +235,7 @@ class ClientController extends BaseController
      *     ),
      * )
      *
-     * @Route("/clients/{id}", name="clients.show", methods={"GET"})
+     * @Route("/clients/show/{id}", name="clients.show", methods={"GET"})
      * @param ClientEntity   $client
      *
      * @param HistoryService $historyService

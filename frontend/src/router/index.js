@@ -11,7 +11,7 @@ export default new VueRouter({
     {path: '/clients', name: 'clients', component: () => import('../views/Client/Index')},
     {
       path: '/clients/:id',
-      name: 'Client',
+      name: 'client',
       component: () => import('../views/Client/Show'),
     },
   ]

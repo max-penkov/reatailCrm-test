@@ -17,6 +17,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Class HistoryListener
@@ -55,7 +56,7 @@ class HistoryListener implements EventSubscriber
      */
     public function createHistory($entity, string $action)
     {
-        $changeSet = $this->entityManager->getUnitOfWork()->getEntityChangeSet($entity);
+        $changeSet   = $this->entityManager->getUnitOfWork()->getEntityChangeSet($entity);
         $entityClass = $entity->getHistoryClass();
         $performedAt = new DateTime();
 
@@ -165,6 +166,20 @@ class HistoryListener implements EventSubscriber
         }
 
         return (string) $value;
+    }
+
+    /**
+     * @param $object
+     *
+     * @return string
+     * @throws MappingException
+     */
+    protected function getObjectIdentifier($object): string
+    {
+        $metadata         = $this->entityManager->getClassMetadata(get_class($object));
+        $propertyAccessor = new PropertyAccessor();
+
+        return (string) $propertyAccessor->getValue($object, $metadata->getSingleIdentifierFieldName());
     }
 
     /**

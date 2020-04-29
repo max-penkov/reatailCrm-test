@@ -9,17 +9,21 @@ import {
 	CREATING_CLIENT, CREATING_CLIENT_SUCCESS,
 	CREATING_CLIENT_ERROR,
 	PAGINATION,
-	SEND_FORM
+	SHOWING_CLIENT,
+	SHOWING_CLIENT_SUCCESS,
+	SHOWING_CLIENT_ERROR,
 } from "./const/clients";
 import Vue from 'vue';
 
 export default {
 	namespaced: true,
 	state: {
-		isLoading: false,
-		error: null,
+		client: null,
 		clients: [],
-		pagination: null
+		history: [],
+		pagination: null,
+		isLoading: false,
+		error: null
 	},
 
 	getters: {
@@ -39,14 +43,36 @@ export default {
 			return state.clients;
 		},
 		client: (state) => (id) => state.clients.find(todo => todo.id === id),
-
 		pagination(state) {
 			return state.pagination;
+		},
+		currentClient(state){
+			return state.client;
+		},
+		history(state){
+			return state.history
 		}
 	},
 
 // mutations
 	mutations: {
+		[SHOWING_CLIENT](state) {
+			state.isLoading = true;
+			state.error = null;
+			state.clients = [];
+		},
+		[SHOWING_CLIENT_SUCCESS](state, data) {
+			state.isLoading = false;
+			state.error = null;
+			state.client = data.client;
+			state.history = data.history
+		},
+		[SHOWING_CLIENT_ERROR](state, error) {
+			state.isLoading = false;
+			state.error = error;
+			state.histories = [];
+			state.client = null
+		},
 		[FETCHING_CLIENTS](state) {
 			state.isLoading = true;
 			state.error = null;
@@ -84,7 +110,7 @@ export default {
 			state.error = null;
 			let arrKey = null;
 			state.clients.find((item, key) => {
-				if(item.id === client.id){
+				if (item.id === client.id) {
 					arrKey = key;
 					return true;
 				}
@@ -145,9 +171,21 @@ export default {
 
 		async sendForm(context, params) {
 			if (params.id) {
-				return context.dispatch('update',  params);
+				return context.dispatch('update', params);
 			} else {
 				return context.dispatch('create', params);
+			}
+		},
+
+		async show({commit}, id) {
+			commit(SHOWING_CLIENT);
+			try {
+				let response = await ClientAPI.show(id);
+				commit(SHOWING_CLIENT_SUCCESS, response.data);
+				return Promise.resolve(response.data);
+			} catch (error) {
+				commit(SHOWING_CLIENT_ERROR, error);
+				return Promise.reject(error);
 			}
 		}
 	}

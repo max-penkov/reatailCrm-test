@@ -18,4 +18,8 @@ export default {
 		delete data['id'];
 		return api().put("/clients/" + id + "/update", data);
 	},
+
+	show(id) {
+		return api().get("/clients/show/" + id);
+	}
 };

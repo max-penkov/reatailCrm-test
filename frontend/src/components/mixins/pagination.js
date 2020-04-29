@@ -6,6 +6,7 @@ export default {
       'pagination',
     ]),
   },
+
   methods: {
     calculatePageCount(perPage){
       let pagination = this.pagination;
