@@ -30,8 +30,6 @@
                 title="Посмотреть"
               )
                 i.fa.fa-eye
-            template(v-slot:status="{value}")
-              b-badge(:variant="getBadgeClass(value.status)") {{ "status" }}
 
       b-col(lg="6")
         ClientForm(

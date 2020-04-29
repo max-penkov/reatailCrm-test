@@ -17,19 +17,16 @@
         b-alert.alert-sm(variant='danger', :show='isError')
           | {{ errorMessage }}
       .contacts-table
-        Loader(:show="isLoading", :is-custom="true")
+        Loader(:show="isLoaded", :is-custom="true")
         TableComponent.mt-5.mb-4(
           :columns="columns"
           :values="history"
           type="stripped"
           :pagination="false"
         )
-          template(v-slot:startedDateTime="{value}")
-            div(v-if="value.startedDateTime")
-              | {{ $moment(value.startedDateTime, 'YYYY-MM-DD HH:mm:ss ZZ').format('Do MMMM YYYY, HH:mm:ss') }}
-          template(v-slot:endedDateTime="{value}")
-            div(v-if="value.endedDateTime")
-              | {{ $moment(value.endedDateTime, 'YYYY-MM-DD HH:mm:ss ZZ').format('Do MMMM YYYY, HH:mm:ss') }}
+          template(v-slot:date="{value}")
+            div(v-if="value.date")
+              | {{ $moment(value.date, 'YYYY-MM-DD HH:mm:ss ZZ').format('Do MMMM YYYY, HH:mm:ss') }}
 
 
 </template>
