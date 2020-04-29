@@ -18,3 +18,9 @@ doctrine:
                 dir: '%kernel.project_dir%/module/Client/src/Entity'
                 prefix: 'Client\Entity'
                 alias: Client
+            Core:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/module/Core/src/Entity'
+                prefix: 'Core\Entity'
+                alias: Core

@@ -108,6 +108,9 @@
 				this.$set(this, 'page', pageNum);
 				this.loadClients();
 			},
+			showClient(id){
+				this.$router.push({path: `/clients/${id.toString()}`})
+			}
 		},
 	}
 </script>

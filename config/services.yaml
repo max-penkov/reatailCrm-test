@@ -29,6 +29,14 @@ services:
     Application\DataFixtures\:
         resource: '../module/Application/src/DataFixtures/*Fixture.php'
         tags: ['doctrine.fixture.orm']
+
+    Application\Listeners\HistoryListener:
+        arguments:
+            $events:
+                - postUpdate
+#                - postPersist
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
 #    Application\Controller\:

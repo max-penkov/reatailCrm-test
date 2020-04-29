@@ -6,6 +6,9 @@ namespace Application\Controller;
 
 use Application\DTO\Client\ApiResponsePagination;
 use Application\DTO\Client\Client;
+use Application\Services\HistoryService;
+use Application\Services\Item;
+use Client\Entity\Address;
 use Client\Entity\Client as ClientEntity;
 use Client\Service\ClientService;
 use Ds\Map;
@@ -195,7 +198,7 @@ class ClientController extends BaseController
      *         @OA\JsonContent(ref="#/components/schemas/Error")
      *     ),
      * )
-     * @Route("/clients/{id}/update", name="clietns.edit", methods={"PUT"})
+     * @Route("/clients/{id}/update", name="clients.edit", methods={"PUT"})
      * @param Request      $request
      * @param ClientEntity $client
      *
@@ -211,5 +214,61 @@ class ClientController extends BaseController
         $clientDTO = Client::buildFromClient($client);
 
         return $this->json($clientDTO, Response::HTTP_OK);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/clients/{id}",
+     *     summary="Show client",
+     *     tags={"Clients"},
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success response"
+     *     ),
+     * )
+     *
+     * @Route("/clients/{id}", name="clients.show", methods={"GET"})
+     * @param ClientEntity   $client
+     *
+     * @param HistoryService $historyService
+     *
+     * @return JsonResponse
+     */
+    public function show(ClientEntity $client, HistoryService $historyService)
+    {
+        $histories = array_merge(
+            $client->getHistories()->toArray(),
+            call_user_func_array(
+                'array_merge',
+                array_map(function (Address $address) {
+                    return $address->getHistories()->toArray();
+                }, $client->getAddress()->toArray())
+            )
+        );
+
+        $feed = $historyService->getAll(...$histories);
+
+        return $this->json([
+            'client'  => Client::buildFromClient($client),
+            'history' => array_map(function (Item $item) {
+                $history = $item->getHistory();
+
+                return [
+                    'date' => $item->getDate(),
+                    'name' => $history->getPropertyName(),
+                    'old'  => $history->getOldValue(),
+                    'new'  => $history->getNewValue(),
+                    'type' => $history->getType(),
+                ];
+            }, $feed),
+        ]);
     }
 }

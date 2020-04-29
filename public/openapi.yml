@@ -66,6 +66,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  '/clients/{id}/update':
+    put:
+      tags:
+        - Clients
+      summary: 'Updating the current client'
+      operationId: 'Application\Controller\ClientController::update'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/clients/{id}':
+    get:
+      tags:
+        - Clients
+      summary: 'Show client'
+      operationId: 'Application\Controller\ClientController::show'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Success response'
 components:
   schemas:
     ApiResponsePagination:

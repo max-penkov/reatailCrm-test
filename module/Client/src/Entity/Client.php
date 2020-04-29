@@ -2,6 +2,7 @@
 
 namespace Client\Entity;
 
+use Core\Interfaces\HistorizableInterface;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"name", "email"})
  */
-class Client
+class Client implements HistorizableInterface
 {
     /**
      * @ORM\Column(type="guid", unique=true)
@@ -40,9 +41,14 @@ class Client
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity="Client\Entity\Address", mappedBy="client", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="client", cascade={"all"})
      */
     private $address;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ClientHistory", mappedBy="owner")
+     */
+    private $histories;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -73,6 +79,7 @@ class Client
         $this->address   = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
+        $this->histories = new ArrayCollection();
     }
 
     /**
@@ -160,9 +167,9 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -176,9 +183,9 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -190,4 +197,18 @@ class Client
     {
         $this->updatedAt = new DateTimeImmutable();
     }
+
+    /**
+     * @return Collection
+     */
+    public function getHistories()
+    {
+        return $this->histories;
+    }
+
+    public function getHistoryClass(): string
+    {
+        return ClientHistory::class;
+    }
+
 }

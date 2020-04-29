@@ -2,12 +2,12 @@
   <div id="app">
     <header class="app-header">
       <Nav />
-      <Flash />
     </header>
 
     <div class="app-content">
       <main class="container">
         <router-view />
+        <Flash />
       </main>
     </div>
 

@@ -2,13 +2,15 @@
 
 namespace Client\Entity;
 
+use Core\Interfaces\HistorizableInterface;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Client\Repository\AddressRepository")
  */
-class Address
+class Address implements HistorizableInterface
 {
     /**
      * @ORM\Column(type="guid", unique=true)
@@ -35,6 +37,11 @@ class Address
      * @ORM\JoinColumn(nullable=false)
      */
     private $client;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AddressHistory", mappedBy="owner")
+     */
+    private $histories;
 
     public function getId(): ?string
     {
@@ -76,4 +83,21 @@ class Address
 
         return $this;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getHistories(): Collection
+    {
+        return $this->histories;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHistoryClass(): string
+    {
+        return AddressHistory::class;
+    }
+
 }

@@ -84,7 +84,7 @@ class ClientService
         try {
             $client = $this->repository->get($id);
             $client->edit($name, $email, $phone);
-            $this->repository->save($client);
+            $client = $this->repository->save($client);
         } catch (Exception $e) {
             throw new DomainException(
                 sprintf('Cant\'t updated client: %s', $e->getMessage()),
