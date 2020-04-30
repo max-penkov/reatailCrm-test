@@ -10,7 +10,7 @@ make asserts-install-build
 
 ## Fixtures
 ```bash
-make  fixtures-load
+make fixtures-load
 ```
 
 ## Api
