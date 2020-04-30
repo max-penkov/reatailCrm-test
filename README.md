@@ -15,7 +15,7 @@ make  fixtures-load
 
 ## Api
 ```bash
-generate-api-doc
+make generate-api-doc
 http://localhost:8000
 ```
 
