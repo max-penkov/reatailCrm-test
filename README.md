@@ -5,7 +5,7 @@
 ```bash
 make init
 make composer-install
-make asserts-install
+make asserts-install-build
 ````
 
 ## Fixtures

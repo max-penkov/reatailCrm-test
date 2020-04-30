@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
+use Apllication\Exception\ValidationException;
 use Application\DTO\Client\ApiResponsePagination;
 use Application\DTO\Client\Client;
 use Application\Services\HistoryService;
 use Application\Services\Item;
+use Application\Services\Validator\Validator;
 use Client\Entity\Address;
 use Client\Entity\Client as ClientEntity;
 use Client\Service\ClientService;
@@ -20,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class ClientController
@@ -41,7 +42,7 @@ class ClientController extends BaseController
      */
     private $logger;
     /**
-     * @var ValidatorInterface
+     * @var Validator
      */
     private $validator;
 
@@ -51,13 +52,13 @@ class ClientController extends BaseController
      * @param ClientService       $service
      * @param SerializerInterface $serializer
      * @param LoggerInterface     $logger
-     * @param ValidatorInterface  $validator
+     * @param Validator  $validator
      */
     public function __construct(
         ClientService $service,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        ValidatorInterface $validator
+        Validator $validator
     ) {
         $this->service    = $service;
         $this->serializer = $serializer;
@@ -159,7 +160,7 @@ class ClientController extends BaseController
 
         // Validation check
         if ($errors = $this->validator->validate($client)) {
-//            throw new ValidationException($errors);
+            throw new ValidationException($errors);
         }
 
         try {
@@ -208,6 +209,11 @@ class ClientController extends BaseController
     {
         /** @var Client $clientDTO */
         $clientDTO = $this->serializer->deserialize($request->getContent(), Client::class, JsonEncoder::FORMAT);
+
+        // Validation check
+        if ($errors = $this->validator->validate($client)) {
+            throw new ValidationException($errors);
+        }
 
         $client = $this->service->update($client->getId(), $clientDTO->name, $clientDTO->email, $clientDTO->phone);
 

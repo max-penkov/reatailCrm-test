@@ -12,8 +12,8 @@ cli:
 composer-install:
 	docker-compose run --rm php-cli composer install
 init: pull build up
-assets-install:
-	docker-compose run --rm node npm install
+assets-install-build:
+	docker-compose run --rm node npm install && npm run build
 migrations-install:
 	docker-compose run --rm php-cli bin/console doctrine:migrations:migrate --no-interaction
 fixtures-load:
