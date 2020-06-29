@@ -10,7 +10,7 @@ services:
             - php-fpm
         ports:
             - "8080:80"
-    frontend-nodejs:
+    node:
         image: node:11.13-alpine
         volumes:
             - ./frontend:/app/frontend

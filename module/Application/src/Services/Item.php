@@ -27,6 +27,7 @@ class Item
     {
         $item          = new self($date);
         $item->history = $model;
+
         return $item;
     }
 

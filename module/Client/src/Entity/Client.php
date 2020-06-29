@@ -210,5 +210,4 @@ class Client implements HistorizableInterface
     {
         return ClientHistory::class;
     }
-
 }

@@ -32,13 +32,7 @@ class ClientRepository implements ClientRepositoryInterface
         $this->repository = $em->getRepository(Client::class);
     }
 
-    /**
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return Vector
-     */
-    public function fetchAll(int $limit, int $offset)
+    public function fetchAll(int $limit, int $offset): Vector
     {
         $clients = new Vector();
         try {
@@ -63,10 +57,7 @@ class ClientRepository implements ClientRepositoryInterface
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getTotal()
+    public function getTotal(): int
     {
         $qb = $this->em->getConnection()->createQueryBuilder();
         $qb->select('count(id)')->from('client', 'c');

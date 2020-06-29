@@ -5,8 +5,15 @@
 ```bash
 make init
 make composer-install
-make asserts-install-build
-````
+make assets-install-build
+make migrations-install
+```
+
+## Php-cs
+```bash
+composer cs-check
+compose cs-fix
+```
 
 ## Fixtures
 ```bash

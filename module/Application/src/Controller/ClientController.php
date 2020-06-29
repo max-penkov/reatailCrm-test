@@ -52,7 +52,7 @@ class ClientController extends BaseController
      * @param ClientService       $service
      * @param SerializerInterface $serializer
      * @param LoggerInterface     $logger
-     * @param Validator  $validator
+     * @param Validator           $validator
      */
     public function __construct(
         ClientService $service,
@@ -122,7 +122,7 @@ class ClientController extends BaseController
     }
 
     /**
-     * @OA\POST(
+     * @OA\Post(
      *     path="/clients/create",
      *     summary="Create a new client",
      *     tags={"Clients"},
@@ -254,9 +254,9 @@ class ClientController extends BaseController
             $client->getHistories()->toArray(),
             call_user_func_array(
                 'array_merge',
-                array_map(function (Address $address) {
+                [array_map(function (Address $address) {
                     return $address->getHistories()->toArray();
-                }, $client->getAddress()->toArray())
+                }, $client->getAddress()->toArray())]
             )
         );
 

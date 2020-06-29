@@ -37,6 +37,7 @@ class AddressHistory extends History implements HistoryOwnerInterface
     public function setOwner($owner): HistoryOwnerInterface
     {
         $this->owner = $owner;
+
         return $this;
     }
 }

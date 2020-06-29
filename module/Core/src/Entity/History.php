@@ -33,7 +33,6 @@ abstract class History
      */
     protected $propertyName;
 
-
     /**
      * @ORM\Column(type="text", nullable=true)
      */

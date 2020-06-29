@@ -99,5 +99,4 @@ class Address implements HistorizableInterface
     {
         return AddressHistory::class;
     }
-
 }
