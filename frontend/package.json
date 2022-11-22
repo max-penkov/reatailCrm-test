@@ -2,7 +2,7 @@
     "devDependencies": {
         "@babel/plugin-transform-runtime": "^7.9.0",
         "@babel/runtime": "^7.9.2",
-        "@symfony/webpack-encore": "^0.29.0",
+        "@symfony/webpack-encore": "^4.1.2",
         "@vue/cli-service": "^4.3.1",
         "babel-eslint": "^10.1.0",
         "core-js": "^3.0.0",
